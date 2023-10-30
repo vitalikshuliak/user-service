@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  db:
+    image: mysql/mysql-server:8.0
+    container_name: testDB
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: userdb
+      MYSQL_USER: newuser
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+
+  app:
+    build: .
+    container_name: testServer
+    depends_on:
+      - db
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: "bridge"
